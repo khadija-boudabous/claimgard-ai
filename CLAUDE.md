@@ -18,3 +18,4 @@ Objectif : démontrer une maîtrise des contraintes de production (Coûts, Laten
 3. **Réflexe Production :** À chaque ajout d'une brique, précise brièvement son impact sur l'un des 4 piliers (Coût, Latence, Fiabilité ou Sécurité).
 4. **Code modulaire et sobre :** Privilégie des fonctions courtes, typées (type hints obligatoires) et sans sur-ingénierie.
 5. **Commits Git :** Messages rédigés en anglais, au format Conventional Commits (`feat:`, `fix:`, `chore:`…). Pas de numéro d'étape et pas de trailer `Co-Authored-By`.
+6. **Transparence des commandes Shell :** Avant chaque appel d'outil Bash, explique en une ou deux phrases simples en français ce que la commande va exécuter et pourquoi, afin que je puisse valider en connaissance de cause.
