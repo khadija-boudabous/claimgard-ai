@@ -6,5 +6,6 @@ __pycache__/
 *.pyc
 .venv/
 
-# Données locales (volumes montés)
-data/
+# Données locales (volumes montés) — sauf le corpus fictif versionné
+data/*
+!data/contracts/

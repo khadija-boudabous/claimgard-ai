@@ -26,6 +26,15 @@ class Settings(BaseSettings):
     # Healthcheck
     health_timeout_s: float = 2.0
 
+    # RAG — changer un modèle impose de ré-ingérer la collection
+    qdrant_collection: str = "contracts"
+    dense_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    sparse_model: str = "Qdrant/bm25"
+    sparse_language: str = "french"
+    embed_cache_dir: str = "/app/.cache/fastembed"
+    chunk_max_words: int = 150  # ≈ 200 tokens en français
+    prefetch_limit: int = 20  # candidats par branche (dense / bm25) avant fusion RRF
+
 
 @lru_cache
 def get_settings() -> Settings:

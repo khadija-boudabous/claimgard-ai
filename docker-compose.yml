@@ -9,6 +9,7 @@ services:
     volumes:
       - ./app:/app/app
       - ./data:/app/data
+      - fastembed_cache:/app/.cache/fastembed
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - qdrant
@@ -66,3 +67,4 @@ volumes:
   qdrant_data:
   redis_data:
   postgres_data:
+  fastembed_cache:
