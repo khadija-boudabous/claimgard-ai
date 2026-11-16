@@ -1,0 +1,10 @@
+# Dépendances directes épinglées — résolues sur python:3.11-slim (pip check OK)
+fastapi==0.163.1
+uvicorn[standard]==0.54.0
+pydantic-settings==2.16.3
+qdrant-client==1.20.0
+redis==8.1.0
+litellm==1.109.1
+instructor==1.17.0
+# SDK v2 obligatoire : le serveur Langfuse du compose est en v2 (SDK >=3 incompatible)
+langfuse==2.60.10
