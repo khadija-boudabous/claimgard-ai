@@ -44,4 +44,4 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()  # type: ignore[call-arg]  # valeurs fournies par l'env
+    return Settings()  # valeurs fournies par l'env (le plugin pydantic.mypy le sait)
