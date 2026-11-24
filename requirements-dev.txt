@@ -1,0 +1,10 @@
+# Outils de dev/CI uniquement — jamais installés dans l'image Docker de production.
+# Installer avec : pip install -r requirements.txt -r requirements-dev.txt
+pytest==9.2.0
+pytest-asyncio==1.5.0
+# Déjà tiré transitivement (litellm, qdrant-client) : épinglé à la même version pour éviter tout conflit
+httpx==0.28.1
+ruff==0.17.6
+mypy==2.4.1
+# grpcio n'embarque pas de type hints : stubs typeshed (alignés sur grpcio 1.85)
+types-grpcio==1.85.0.20261122

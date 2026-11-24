@@ -1,0 +1,21 @@
+# Configuration des outils uniquement (pas de [build-system] : l'app est livrée en image Docker).
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+# BLE : except trop larges · ASYNC : appels bloquants dans les coroutines · B : bugs probables
+select = ["E", "F", "W", "I", "B", "UP", "BLE", "ASYNC", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["app", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-ra --strict-markers"
