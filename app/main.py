@@ -40,7 +40,9 @@ class RetrieveResponse(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
-    app.state.qdrant = AsyncQdrantClient(url=str(settings.qdrant_url))
+    app.state.qdrant = AsyncQdrantClient(
+        url=str(settings.qdrant_url), grpc_port=settings.qdrant_grpc_port, prefer_grpc=True
+    )
     app.state.redis = Redis.from_url(str(settings.redis_url))
     # Chargement unique des modèles au démarrage : aucune requête ne paie le cold start
     app.state.embedder = await asyncio.to_thread(load_embedder, settings)

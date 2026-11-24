@@ -3,6 +3,7 @@
 import asyncio
 import time
 
+import grpc
 from pydantic import BaseModel
 from qdrant_client import AsyncQdrantClient, models
 from qdrant_client.http.exceptions import UnexpectedResponse
@@ -32,6 +33,13 @@ def _elapsed_ms(start: float) -> float:
     return round((time.perf_counter() - start) * 1000, 2)
 
 
+def _is_not_found(exc: Exception) -> bool:
+    """Collection absente, que le client parle REST (404) ou gRPC (NOT_FOUND)."""
+    if isinstance(exc, UnexpectedResponse):
+        return exc.status_code == 404
+    return isinstance(exc, grpc.aio.AioRpcError) and exc.code() == grpc.StatusCode.NOT_FOUND
+
+
 async def hybrid_search(
     client: AsyncQdrantClient,
     embedder: HybridEmbedder,
@@ -57,8 +65,8 @@ async def hybrid_search(
             limit=top_k,
             with_payload=True,
         )
-    except UnexpectedResponse as exc:
-        if exc.status_code == 404:
+    except (UnexpectedResponse, grpc.aio.AioRpcError) as exc:
+        if _is_not_found(exc):
             raise CollectionNotFoundError(collection) from exc
         raise
     search_ms = _elapsed_ms(start)

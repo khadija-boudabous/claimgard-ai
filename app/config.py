@@ -11,6 +11,7 @@ class Settings(BaseSettings):
 
     # Services internes
     qdrant_url: AnyHttpUrl
+    qdrant_grpc_port: int = 6334  # API en gRPC (HTTP/2 + protobuf), ingestion en REST
     redis_url: RedisDsn
 
     # Fournisseurs LLM (un seul suffit)
