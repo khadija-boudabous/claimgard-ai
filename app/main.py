@@ -11,6 +11,7 @@ from redis.asyncio import Redis
 
 from app.config import get_settings
 from app.rag.embedder import load_embedder
+from app.rag.reranker import load_reranker
 from app.rag.search import CollectionNotFoundError, Passage, hybrid_search
 
 
@@ -34,6 +35,7 @@ class RetrieveResponse(BaseModel):
     results: list[Passage]
     embedding_ms: float
     search_ms: float
+    rerank_ms: float
     total_ms: float
 
 
@@ -46,6 +48,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.redis = Redis.from_url(str(settings.redis_url))
     # Chargement unique des modèles au démarrage : aucune requête ne paie le cold start
     app.state.embedder = await asyncio.to_thread(load_embedder, settings)
+    app.state.reranker = await asyncio.to_thread(load_reranker, settings)
     yield
     await app.state.qdrant.close()
     await app.state.redis.aclose()
@@ -88,10 +91,12 @@ async def retrieve(body: RetrieveRequest, request: Request) -> RetrieveResponse:
         result = await hybrid_search(
             request.app.state.qdrant,
             request.app.state.embedder,
+            request.app.state.reranker,
             settings.qdrant_collection,
             body.query,
             body.top_k,
             settings.prefetch_limit,
+            settings.rerank_candidates,
         )
     except CollectionNotFoundError:
         raise HTTPException(
@@ -102,5 +107,6 @@ async def retrieve(body: RetrieveRequest, request: Request) -> RetrieveResponse:
         results=result.passages,
         embedding_ms=result.embedding_ms,
         search_ms=result.search_ms,
+        rerank_ms=result.rerank_ms,
         total_ms=round((time.perf_counter() - start) * 1000, 2),
     )

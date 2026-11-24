@@ -36,6 +36,11 @@ class Settings(BaseSettings):
     chunk_max_words: int = 150  # ≈ 200 tokens en français
     prefetch_limit: int = 20  # candidats par branche (dense / bm25) avant fusion RRF
 
+    # Reranking cross-encoder (2e étage), opt-in : "BAAI/bge-reranker-v2-m3-int8" (multilingue,
+    # Apache-2.0) → hit@1 0,8→1,0 mais +1,7 s p50 sur CPU. None = désactivé (défaut).
+    rerank_model: str | None = None
+    rerank_candidates: int = 10  # candidats RRF re-scorés avant de garder top_k
+
 
 @lru_cache
 def get_settings() -> Settings:
